@@ -1,6 +1,7 @@
 package com.api.utils;
 
 import com.api.dtos.ErrorMessageJson;
+import com.api.exceptions.ApiException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import spark.Response;
 
@@ -21,6 +22,12 @@ public class JsonResponseFactory {
         return createJsonResponse(res, HttpServletResponse.SC_OK, map);
     }
 
+
+    public static String createSuccessResponse(Response res, Object o) throws ApiException {
+        return createJsonResponse(res, HttpServletResponse.SC_OK, o);
+    }
+
+
     public static String createJsonResponse(Response res, int statusCode, Object o) {
         try {
             res.header("Content-Type", "application/json");
@@ -28,7 +35,7 @@ public class JsonResponseFactory {
             return JsonFormatter.format(o);
         } catch (JsonProcessingException e) {
             res.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            return "description: \"JsonFormatter se pegó un palo: \"" + e.getMessage();
+            return "Description: Bad JsonFormatter" + e.getMessage();
         }
     }
 

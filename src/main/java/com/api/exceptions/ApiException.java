@@ -9,18 +9,8 @@ public class ApiException extends Exception {
         return httpStatusCode;
     }
 
-    public ApiException(String message) {
-        super(message);
-        this.httpStatusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-    }
-
     public ApiException(String message, Throwable cause) {
         super(message, cause);
-        this.httpStatusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-    }
-
-    public ApiException(Throwable cause) {
-        super(cause);
         this.httpStatusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
     }
 
@@ -29,4 +19,13 @@ public class ApiException extends Exception {
         this.httpStatusCode = httpStatusCode;
     }
 
+    public ApiException(Throwable cause) {
+        super(cause);
+        this.httpStatusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+    }
+
+    public ApiException(String message) {
+        super(message);
+        this.httpStatusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+    }
 }
