@@ -27,7 +27,6 @@ public class UserController {
         }
     }
 
-
     public static Object createUser(Request req, Response res) throws ApiException {
       try {
             UserDomain userDomain = UserDomain.createFrom(JsonFormatter.parse(req.body(), UserJson.class));
@@ -43,10 +42,10 @@ public class UserController {
         }
     }
 
-
     public static Object updateUser(Request req, Response res) throws ApiException {
         try {
             UserDomain userDomain = UserDomain.createFrom(JsonFormatter.parse(req.body(), UserJson.class));
+            validateUserId(userDomain.getUserId());
             DaoService.INSTANCE.merge(userDomain);
 
             return JsonResponseFactory.createSuccessResponse(res,userDomain);
@@ -61,11 +60,11 @@ public class UserController {
             Integer userId = Integer.valueOf(req.params("user_id"));
 
             if (req.headers("X-Admin") == null || !req.headers("X-Admin").equals("true")) {
-                throw new ApiException("Only admins can delete cars.", HttpServletResponse.SC_FORBIDDEN);
+                throw new ApiException("Only admins can delete Users.", HttpServletResponse.SC_FORBIDDEN);
             }
 
             validateUserId(userId);
-            getCarById(userId);
+            getUserById(userId);
             DaoService.INSTANCE.deleteUser(userId);
 
             return JsonResponseFactory.createJsonResponse(res,HttpServletResponse.SC_OK,String.format("The CarId (%d) was removed from the DB.", userId));
@@ -77,8 +76,7 @@ public class UserController {
 
 
 
-
-    public static UserDomain getCarById(Integer userId) throws ApiException {
+    public static UserDomain getUserById(Integer userId) throws ApiException {
         UserDomain userDomain = DaoService.INSTANCE.getUser(userId);
         if (userDomain == null)
             throw new ApiException(String.format("The userId (%d) was not found on the DB.", userId), HttpServletResponse.SC_NOT_FOUND);
