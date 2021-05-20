@@ -6,16 +6,15 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">org.hsqldb.jdbc.JDBCDriver</property>
-        <property name="hibernate.connection.url">jdbc:hsqldb:mem:ordersSumm</property>
+        <property name="hibernate.connection.url">jdbc:hsqldb:mem:user</property>
         <property name="hibernate.connection.username">root</property>
-        <property name="hibernate.connection.password">root</property>
+        <property name="hibernate.connection.password">rootpassword</property>
         <property name="hibernate.dialect">org.hibernate.dialect.HSQLDialect</property>
         <property name="hibernate.hbm2ddl.auto">update</property>
 
         <property name="show_sql">true</property>
 
-        <mapping class="com.adb.domain.Users"/>
-        <mapping class="com.adb.domain.Orders"/>
+        <mapping class="com.api.domain.Users"/>
 
     </session-factory>
 </hibernate-configuration>

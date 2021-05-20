@@ -21,7 +21,10 @@ public class UserController {
             UserDomain userDomain = DaoService.INSTANCE.getUser(userId);
             if (userDomain == null)
                 throw new ApiException(String.format("The UserId (%d) was not found on the DB.", userId), HttpServletResponse.SC_NOT_FOUND);
-            return JsonResponseFactory.createJsonResponse(res, HttpServletResponse.SC_OK,userDomain);
+
+            UserJson userJson = UserJson.createFrom(userDomain);
+
+            return JsonResponseFactory.createJsonResponse(res, HttpServletResponse.SC_OK,userJson);
         } catch (NumberFormatException e) {
             throw new ApiException(e.getMessage(), HttpServletResponse.SC_BAD_REQUEST);
         }
@@ -29,10 +32,10 @@ public class UserController {
 
     public static Object createUser(Request req, Response res) throws ApiException {
       try {
-            UserDomain userDomain = UserDomain.createFrom(JsonFormatter.parse(req.body(), UserJson.class));
-
-            validateUserId(userDomain.getUserId());
-            validateDuplicateRecord(userDomain.getUserId());
+            UserJson userJson = JsonFormatter.parse(req.body(), UserJson.class);
+            validateUserId(userJson.getUserId());
+            validateDuplicateRecord(userJson.getUserId());
+            UserDomain userDomain = UserDomain.createFrom(userJson);
             DaoService.INSTANCE.merge(userDomain);
 
             return JsonResponseFactory.createSuccessResponse(res, userDomain);
@@ -44,8 +47,10 @@ public class UserController {
 
     public static Object updateUser(Request req, Response res) throws ApiException {
         try {
-            UserDomain userDomain = UserDomain.createFrom(JsonFormatter.parse(req.body(), UserJson.class));
-            validateUserId(userDomain.getUserId());
+
+            UserJson userJson = JsonFormatter.parse(req.body(), UserJson.class);
+            validateUserId(userJson.getUserId());
+            UserDomain userDomain = UserDomain.createFrom(userJson);
             DaoService.INSTANCE.merge(userDomain);
 
             return JsonResponseFactory.createSuccessResponse(res,userDomain);
